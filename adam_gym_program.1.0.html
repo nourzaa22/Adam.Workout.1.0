@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برنامج آدم 💪</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff87;--g2:rgba(0,255,135,.13);--o:#ff6030;--o2:rgba(255,96,48,.13);
+  --bg:#080808;--c1:#111;--c2:#161616;--bd:#1f1f1f;
+  --mu:rgba(242,242,240,.42);--ink:#f0eeeb
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Cairo',sans-serif;background:var(--bg);color:var(--ink);
+  direction:rtl;max-width:450px;margin:0 auto;padding-bottom:56px;overflow-x:hidden
+}
+/* grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.03;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E") repeat;background-size:150px
+}
+/* dot grid */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1px);background-size:22px 22px
+}
+
+/* ── SPLASH ─── */
+.splash{position:relative;z-index:1;padding:46px 22px 32px;overflow:hidden}
+.sg{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:380px;height:380px;background:radial-gradient(circle,rgba(0,255,135,.1),transparent 65%);pointer-events:none}
+.eyebrow{font-size:.68rem;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:8px;opacity:.8}
+.sname{font-size:3.5rem;font-weight:900;line-height:.9;color:var(--ink)}
+.sname span{color:var(--g);display:block}
+.ssub{font-size:.83rem;color:var(--mu);margin-top:12px;line-height:1.6;max-width:270px}
+.pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+.pill{font-size:.69rem;font-weight:700;padding:4px 12px;border-radius:99px}
+.pill-g{background:rgba(0,255,135,.1);border:1px solid rgba(0,255,135,.25);color:var(--g)}
+.pill-o{background:rgba(255,96,48,.1);border:1px solid rgba(255,96,48,.25);color:var(--o)}
+.pill-w{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45)}
+
+/* ── HINT ─── */
+.hint{position:relative;z-index:1;margin:0 15px 4px;padding:9px 13px;background:rgba(255,200,0,.05);border:1px solid rgba(255,200,0,.15);border-radius:9px;font-size:.7rem;color:rgba(255,200,0,.72);display:flex;align-items:center;gap:7px}
+
+/* ── SECTION HEAD ─── */
+.sec-head{position:relative;z-index:1;display:flex;align-items:flex-end;gap:12px;padding:28px 22px 14px}
+.sec-big{font-size:2.4rem;font-weight:900;line-height:1}
+.sec-big.g{color:var(--g)}.sec-big.o{color:var(--o)}
+.sec-label{font-size:.75rem;font-weight:700;color:var(--mu);letter-spacing:.4px}
+.sec-note{font-size:.68rem;color:var(--mu);opacity:.55;margin-top:1px}
+.sec-rule{height:1px;margin:0 22px;background:var(--bd);position:relative;z-index:1}
+
+/* ── WORKOUT CARD ─── */
+.wcard{position:relative;z-index:1;margin:10px 14px;background:var(--c1);border-radius:20px;overflow:hidden;border:1px solid var(--bd)}
+.wcard.gym{border-left:3px solid rgba(0,255,135,.3)}
+.wcard.home{border-right:3px solid rgba(255,96,48,.3)}
+.wcard-glow{position:absolute;top:0;left:0;right:0;height:80px;pointer-events:none}
+.wcard.gym .wcard-glow{background:linear-gradient(to bottom,rgba(0,255,135,.045),transparent)}
+.wcard.home .wcard-glow{background:linear-gradient(to bottom,rgba(255,96,48,.045),transparent)}
+
+/* ── CARD HEAD ─── */
+.chead{padding:16px 18px 0;position:relative}
+.chead-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.ctag{font-size:.6rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.ctag.g{color:var(--g)}.ctag.o{color:var(--o)}
+.ctitle{font-size:1.16rem;font-weight:900;line-height:1.15}
+.csub{font-size:.72rem;color:var(--mu);margin-top:2px}
+.cico{font-size:1.9rem;flex-shrink:0;opacity:.8;margin-top:-2px}
+
+/* ── FOUNDATION BANNER ─── */
+.fbanner{margin:12px 15px 10px;padding:12px 14px;background:rgba(0,255,135,.04);border:1px solid rgba(0,255,135,.12);border-radius:12px;font-size:.77rem;color:rgba(255,255,255,.55);line-height:1.55}
+.fbanner strong{color:var(--g);display:block;font-size:.75rem;margin-bottom:3px}
+
+/* ── EXERCISE GRID ─── */
+.ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px 16px}
+
+/* ── EXERCISE CARD ─── */
+.exc{background:var(--c2);border-radius:14px;overflow:hidden;border:1px solid var(--bd);display:flex;flex-direction:column}
+.exc:active{opacity:.9}
+
+/* photo container */
+.exc-photo{position:relative;width:100%;aspect-ratio:4/3;background:#0a0a0a;overflow:hidden}
+.exc-photo img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .35s;filter:brightness(.88) contrast(1.05)
+}
+.exc:hover .exc-photo img{transform:scale(1.05)}
+/* color overlay tint per section */
+.exc-photo .tint{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.18) 50%,transparent 100%)
+}
+/* sets badge overlaid on photo */
+.exc-badge{
+  position:absolute;top:7px;left:7px;
+  font-size:.66rem;font-weight:900;padding:3px 8px;border-radius:6px;
+  backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12)
+}
+.exc-badge.g{background:rgba(0,0,0,.55);color:var(--g)}
+.exc-badge.o{background:rgba(0,0,0,.55);color:var(--o)}
+/* star badge */
+.exc-star{
+  position:absolute;top:7px;right:7px;
+  font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:6px;
+  background:rgba(0,0,0,.6);color:#ffd500;border:1px solid rgba(255,213,0,.3);
+  backdrop-filter:blur(8px)
+}
+
+/* text section */
+.exc-body{padding:7px 10px 9px}
+.exc-name{font-size:.84rem;font-weight:700;color:var(--ink);line-height:1.25}
+.exc-tip{font-size:.68rem;color:var(--mu);margin-top:3px;line-height:1.4;font-style:italic}
+
+/* fallback when image fails */
+.exc-fallback{
+  width:100%;aspect-ratio:4/3;display:none;align-items:center;justify-content:center;
+  font-size:2.4rem;
+}
+.exc-fallback.g{background:linear-gradient(135deg,#0a1a10,#0f2a1a)}
+.exc-fallback.o{background:linear-gradient(135deg,#1a0a05,#2a1208)}
+
+/* ── YOUTUBE BLOCK ─── */
+.yt-wrap{
+  margin:8px 14px 2px;border-radius:13px;overflow:hidden;position:relative;
+  aspect-ratio:16/9;background:#0d0d0d;display:block;text-decoration:none
+}
+.yt-img{width:100%;height:100%;object-fit:cover;transition:transform .4s,filter .3s;filter:brightness(.88)}
+.yt-wrap:hover .yt-img{transform:scale(1.04);filter:brightness(.98)}
+.yt-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.42),transparent 55%,rgba(0,0,0,.22));display:flex;align-items:center;justify-content:center}
+.yt-btn{
+  width:56px;height:56px;background:rgba(200,0,0,.92);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 5px 22px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s
+}
+.yt-wrap:hover .yt-btn{transform:scale(1.1);box-shadow:0 7px 28px rgba(0,0,0,.55),0 0 24px rgba(200,0,0,.35)}
+.yt-btn svg{width:22px;fill:white;margin-right:-3px}
+.yt-lbl{
+  position:absolute;bottom:0;right:0;left:0;
+  padding:18px 13px 10px;
+  background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
+  font-size:.74rem;font-weight:700;color:rgba(255,255,255,.92);
+  display:flex;justify-content:space-between;align-items:flex-end
+}
+.yt-note{font-size:.64rem;color:rgba(255,255,255,.45);font-weight:400}
+
+/* ── DIVIDER ─── */
+.pdiv{position:relative;z-index:1;margin:24px 15px;display:flex;align-items:center;gap:10px}
+.pdiv-line{flex:1;height:1px;background:var(--bd)}
+.pdiv-lbl{font-size:.61rem;font-weight:700;letter-spacing:2px;color:var(--mu);opacity:.45;text-transform:uppercase}
+
+/* ── FOOTER ─── */
+.footer{
+  position:relative;z-index:1;margin:16px 14px 0;padding:18px;
+  background:var(--c1);border-radius:16px;border:1px solid var(--bd);text-align:center
+}
+.footer-name{font-size:1.35rem;font-weight:900;color:var(--g);margin-bottom:3px}
+.footer-sub{font-size:.75rem;color:var(--mu);line-height:1.65}
+
+/* ── ANIMATIONS ─── */
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.splash{animation:up .5s ease both}
+
+/* ── PRINT ─── */
+@media print{
+  body::after,body::before{display:none}
+  body{background:#fff;color:#111}
+  .wcard{background:#f8f8f8;border:1px solid #ddd;break-inside:avoid}
+  .exc{background:#f0f0f0}
+  .exc-photo img{filter:none}
+  .footer{background:#f8f8f8}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash">
+  <div class="sg"></div>
+  <div class="eyebrow">برنامجك الشخصي</div>
+  <div class="sname">مرحبا<span>آدم 💪</span></div>
+  <div class="ssub">أول خطوة هي الأصعب — وأنت عملتها. دلوقتي الكلام بقا للأوزان.</div>
+  <div class="pills">
+    <span class="pill pill-g">🏋️ جيم</span>
+    <span class="pill pill-o">🏠 بيت</span>
+    <span class="pill pill-w">مبتدئ ١٠٠٪</span>
+    <span class="pill pill-w">٤٥-٦٠ دقيقة</span>
+  </div>
+</div>
+
+<div class="hint"><span>📲</span>افتح في المتصفح — الفيديوهات والصور هتشتغل بضغطة واحدة</div>
+
+<div id="app"></div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-name">برنامج آدم 💪</div>
+  <div class="footer-sub">
+    إحماء ١٠ دق قبل أي تمرين · راحة ٦٠-٩٠ ث بين السيتات<br>
+    <span style="font-size:.67rem;color:rgba(255,255,255,.22)">ابدأ خفيف — الوزن هييجي مع الوقت</span>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// REAL EXERCISE PHOTO URLS (free-exercise-db — public domain)
+// ─────────────────────────────────────────
+const BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const IMGS = {
+  goblet_squat:   BASE+'Goblet_Squat/0.jpg',
+  bench_press:    BASE+'Dumbbell_Bench_Press_with_Neutral_Grip/0.jpg',
+  lat_pulldown:   BASE+'Wide-Grip_Lat_Pulldown/0.jpg',
+  shoulder_press: BASE+'Dumbbell_Shoulder_Press/0.jpg',
+  cable_row:      BASE+'Seated_Cable_Rows/0.jpg',
+  plank:          BASE+'Plank/0.jpg',
+  bicep_curl:     BASE+'Dumbbell_Alternate_Bicep_Curl/0.jpg',
+  tricep_push:    BASE+'Triceps_Pushdown/0.jpg',
+  leg_press:      BASE+'Narrow_Stance_Leg_Press/0.jpg',
+  leg_extension:  BASE+'Leg_Extensions/0.jpg',
+  leg_curl:       BASE+'Lying_Leg_Curls/0.jpg',
+  calf_raise:     BASE+'Standing_Dumbbell_Calf_Raise/0.jpg',
+  crunches:       BASE+'Crunches/0.jpg',
+  incline_press:  BASE+'Incline_Dumbbell_Press/0.jpg',
+  lateral_raise:  BASE+'Side_Lateral_Raise/0.jpg',
+  cable_fly:      BASE+'Flat_Bench_Cable_Flyes/0.jpg',
+  db_row:         BASE+'Bent_Over_Two-Dumbbell_Row/0.jpg',
+  face_pull:      BASE+'Face_Pull/0.jpg',
+  hammer_curl:    BASE+'Alternate_Hammer_Curl/0.jpg',
+  rdl:            BASE+'Romanian_Deadlift/0.jpg',
+  squat_bw:       BASE+'Bodyweight_Squat/0.jpg',
+  pushups:        BASE+'Pushups/0.jpg',
+  dips:           BASE+'Dips_-_Triceps_Version/0.jpg',
+  pike_pu:        BASE+'Pushups_Close_and_Wide_Hand_Positions/0.jpg',
+  lunges:         BASE+'Bodyweight_Walking_Lunge/0.jpg',
+  glute_bridge:   BASE+'Barbell_Glute_Bridge/0.jpg',
+  leg_raise:      BASE+'Flat_Bench_Lying_Leg_Raise/0.jpg',
+  mountain:       BASE+'Mountain_Climbers/0.jpg',
+  side_plank:     BASE+'Push_Up_to_Side_Plank/0.jpg',
+  superman:       BASE+'Superman/0.jpg',
+  wall_sit:       BASE+'Sit_Squats/0.jpg',
+  shoulder_taps:  BASE+'Plank/0.jpg',
+  jumping_jacks:  BASE+'Rope_Jumping/0.jpg',
+  high_knees:     BASE+'Trail_Running_Walking/0.jpg',
+  jog:            BASE+'Trail_Running_Walking/0.jpg',
+};
+
+// Fallback emoji per exercise key
+const EMOJI = {
+  goblet_squat:'🏋️',bench_press:'💪',lat_pulldown:'⬇️',shoulder_press:'☝️',
+  cable_row:'🔄',plank:'📏',bicep_curl:'💪',tricep_push:'👇',leg_press:'🦵',
+  leg_extension:'🦵',leg_curl:'🦵',calf_raise:'🦶',crunches:'🔥',incline_press:'💪',
+  lateral_raise:'↔️',cable_fly:'🤲',db_row:'⬆️',face_pull:'😤',hammer_curl:'🔨',
+  rdl:'⬇️',squat_bw:'⬇️',pushups:'🤸',dips:'⬇️',pike_pu:'🙆',lunges:'🚶',
+  glute_bridge:'🍑',leg_raise:'⬆️',mountain:'🏔️',side_plank:'📐',superman:'🦸',
+  wall_sit:'🧱',shoulder_taps:'✋',jumping_jacks:'⭐',high_knees:'🏃',jog:'🏃',
+};
+
+// ─────────────────────────────────────────
+// WORKOUT DATA
+// ─────────────────────────────────────────
+const workouts = [
+  // ── GYM SECTION ──────────────────────
+  {
+    id:'foundation', type:'gym', icon:'⚡',
+    tag:'الأساس أولاً', title:'التمارين الجوهرية',
+    sub:'إتقن الفورم الصح قبل أي حاجة تانية',
+    banner:{
+      title:'⭐ ليه هاترجع لده كل مرة؟',
+      body:'كل تمرين هنا فيه تفاصيل دقيقة في الفورم هتعرفها بس لما تاخد خبرة. في أول أسبوع هتعمله بشكل، بعد شهر هتعمله بشكل تاني خالص.'
+    },
+    exercises:[
+      {key:'goblet_squat',  name:'جوبليت سكوات',   sets:'٣ × ١٢', tip:'ظهرك مستقيم، ركبتيك في اتجاه صوابعك', star:true},
+      {key:'bench_press',   name:'دمبل تشيست بريس', sets:'٣ × ١٢', tip:'كوعك زاوية ٤٥°، مش ٩٠°'},
+      {key:'lat_pulldown',  name:'لات بولداون',      sets:'٣ × ١٢', tip:'الأكواع للأسفل والخلف، مش بتشيل بإيديك', star:true},
+      {key:'shoulder_press',name:'شولدر بريس',       sets:'٣ × ١٠', tip:'ضهرك مستقيم — لو بيتقوس خفف الوزن'},
+      {key:'cable_row',     name:'كيبل رو',          sets:'٣ × ١٢', tip:'اسحب لصدرك، اضغط اللوحين في بعض'},
+      {key:'plank',         name:'بلانك',            sets:'٣ × ٣٠ث', tip:'شد بطنك كأنك بتستنى لكمة', star:true},
+    ]
+  },
+  {
+    id:'upper', type:'gym', icon:'💪',
+    tag:'Upper Body', title:'اليوم العام — أعلى الجسم',
+    sub:'صدر · ظهر · كتاف · أيدين',
+    yt:{id:'EItwB-u-t2U', note:'ارجع لده كل مرة تبدأ اليوم ده'},
+    exercises:[
+      {key:'bench_press',   name:'دمبل تشيست بريس', sets:'٣ × ١٢', tip:'حس الصدر في كل تكرار'},
+      {key:'lat_pulldown',  name:'لات بولداون',      sets:'٣ × ١٢', tip:'اكسر الهيكل لنص مش بتشيله'},
+      {key:'shoulder_press',name:'شولدر بريس',       sets:'٣ × ١٠', tip:'ارفع للأعلى ببطء'},
+      {key:'cable_row',     name:'سيتد كيبل رو',     sets:'٣ × ١٢', tip:'اسحب لصدرك وثبت ثانية'},
+      {key:'bicep_curl',    name:'بايسبس كيرل',       sets:'٣ × ١٢', tip:'الكوع ثابت جنبك'},
+      {key:'tricep_push',   name:'ترايسبس بوش داون', sets:'٣ × ١٢', tip:'الأكواع ملصوقة بجسمك'},
+    ]
+  },
+  {
+    id:'lower', type:'gym', icon:'🦵',
+    tag:'Lower Body', title:'اليوم العام — أسفل الجسم',
+    sub:'رجلين · فخاذ · عجل · كور',
+    exercises:[
+      {key:'leg_press',     name:'ليج بريس',         sets:'٤ × ١٢', tip:'رجليك على عرض الكتاف', star:true},
+      {key:'goblet_squat',  name:'جوبليت سكوات',   sets:'٣ × ١٢', tip:'انزل للموازي ببطء'},
+      {key:'leg_extension', name:'ليج إكستنشن',      sets:'٣ × ١٥', tip:'مد الرجل بالكامل وثبت'},
+      {key:'leg_curl',      name:'ليج كيرل',         sets:'٣ × ١٢', tip:'انحن الركبة بالكامل'},
+      {key:'calf_raise',    name:'كالف رايز',        sets:'٣ × ٢٠', tip:'انزل ببطء شديد — ده السر'},
+      {key:'crunches',      name:'كرانش',            sets:'٣ × ١٥', tip:'شد بطنك مش رقبتك'},
+    ]
+  },
+  {
+    id:'push', type:'gym', icon:'🚀',
+    tag:'Push Day', title:'يوم الدفع',
+    sub:'صدر · كتاف · ترايسبس',
+    yt:{id:'5SFksZttfmY', note:'الفورم أهم من الوزن'},
+    exercises:[
+      {key:'bench_press',   name:'بنش بريس دمبل',   sets:'٤ × ١٠', tip:'ارفع الصدر للهيكل مش العكس', star:true},
+      {key:'incline_press', name:'إنكلاين بريس',     sets:'٣ × ١٢', tip:'نفس التقنية بس على المائل'},
+      {key:'shoulder_press',name:'أوفرهيد بريس',     sets:'٣ × ١٠', tip:'شد الكور طول الوقت'},
+      {key:'lateral_raise', name:'لاترال رايز',      sets:'٣ × ١٢', tip:'خفيف وصح — التقيل مش بيفيد هنا'},
+      {key:'tricep_push',   name:'ترايسبس بوش داون', sets:'٣ × ١٢', tip:'الأكواع ملصوقة بجسمك'},
+      {key:'cable_fly',     name:'كيبل فلاي',        sets:'٣ × ١٢', tip:'حس الصدر بيلتقي في المنتصف'},
+    ]
+  },
+  {
+    id:'pull', type:'gym', icon:'🪝',
+    tag:'Pull Day', title:'يوم الشد',
+    sub:'ظهر · بايسبس · كتاف خلفية',
+    yt:{id:'faBHUlESr2Q', note:'الظهر ده اللي بيعمل الجسم واسع'},
+    exercises:[
+      {key:'lat_pulldown',  name:'لات بولداون',      sets:'٤ × ١٢', tip:'الأكواع للأسفل والخلف', star:true},
+      {key:'cable_row',     name:'سيتد كيبل رو',     sets:'٣ × ١٢', tip:'اضغط اللوحين في بعض'},
+      {key:'db_row',        name:'دمبل رو',           sets:'٣ × ١٠', tip:'ظهرك موازي للأرض'},
+      {key:'face_pull',     name:'فيس بول',          sets:'٣ × ١٥', tip:'لكتاف صحية — ماتتجاهلوش'},
+      {key:'bicep_curl',    name:'بايسبس كيرل',       sets:'٣ × ١٢', tip:'الكوع ثابت'},
+      {key:'hammer_curl',   name:'هامر كيرل',        sets:'٣ × ١٢', tip:'الإبهام للأعلى'},
+    ]
+  },
+  {
+    id:'leg', type:'gym', icon:'🏆',
+    tag:'Leg Day', title:'يوم الرجلين',
+    sub:'كوادز · هامسترينج · جلوت · عجل',
+    yt:{id:'Ms6Apj7NKK4', note:'الناس بتكره يوم الرجل — انت مش هتبقا منهم'},
+    exercises:[
+      {key:'leg_press',     name:'ليج بريس',         sets:'٤ × ١٢', tip:'ادفع بكعبك مش صوابعك'},
+      {key:'squat_bw',      name:'سكوات',            sets:'٤ × ١٠', tip:'عمق الموازي هو الهدف', star:true},
+      {key:'rdl',           name:'ديدليفت روماني',   sets:'٣ × ١٠', tip:'ظهرك مستقيم، انحن من الهيب'},
+      {key:'leg_curl',      name:'ليج كيرل',         sets:'٣ × ١٢', tip:'انحن الركبة بالكامل'},
+      {key:'leg_extension', name:'ليج إكستنشن',      sets:'٣ × ١٥', tip:'مد ببطء وانزل ببطء'},
+      {key:'calf_raise',    name:'كالف رايز',        sets:'٣ × ٢٠', tip:'انزل ببطء شديد'},
+    ]
+  },
+  // ── HOME SECTION ─────────────────────
+  {
+    id:'homeA', type:'home', icon:'💥',
+    tag:'Home · Split A', title:'أعلى الجسم',
+    sub:'صدر · كتاف · ترايسبس · ظهر علوي',
+    exercises:[
+      {key:'pushups',       name:'بوش آبس',          sets:'٣ × ١٠', tip:'جسمك مستقيم زي لوح'},
+      {key:'dips',          name:'دايبس (كرسي)',     sets:'٣ × ١٢', tip:'انزل ببطء حس الترايسبس'},
+      {key:'pike_pu',       name:'بايك بوش آبس',     sets:'٣ × ١٠', tip:'هيب للأعلى، رأسك بين إيديك'},
+      {key:'superman',      name:'سوبرمان',          sets:'٣ × ١٢', tip:'ارفع الإيدين والرجلين معاً'},
+      {key:'plank',         name:'بلانك',            sets:'٣ × ٣٠ث', tip:'شد بطنك وثبت'},
+      {key:'shoulder_taps', name:'شولدر تابس',       sets:'٣ × ٢٠', tip:'متحركش الوسط'},
+    ]
+  },
+  {
+    id:'homeB', type:'home', icon:'🔥',
+    tag:'Home · Split B', title:'أسفل الجسم',
+    sub:'رجلين · جلوت · عجل · كور',
+    exercises:[
+      {key:'squat_bw',      name:'سكوات',            sets:'٤ × ١٥', tip:'انزل للموازي ببطء'},
+      {key:'lunges',        name:'لانج',             sets:'٣ × ١٢', tip:'ركبتك الخلفية للأرض ببطء'},
+      {key:'glute_bridge',  name:'جلوت بريدج',       sets:'٣ × ١٥', tip:'ارفع الهيب واضغط المؤخرة'},
+      {key:'calf_raise',    name:'كالف رايز',        sets:'٣ × ٢٠', tip:'على حافة السلم يكون أفضل'},
+      {key:'wall_sit',      name:'ووول ست',          sets:'٣ × ٣٥ث', tip:'تسعين درجة واحتمل'},
+      {key:'leg_raise',     name:'ليج رايز',         sets:'٣ × ١٢', tip:'ظهرك ملصوق بالأرض'},
+    ]
+  },
+  {
+    id:'homeC', type:'home', icon:'💨',
+    tag:'Home · Split C', title:'الحرق والكور',
+    sub:'كارديو · بطن · حرق دهون',
+    exercises:[
+      {key:'jumping_jacks', name:'جامبينج جاكس',     sets:'٣ × ٤٠ث', tip:'إيقاع ثابت'},
+      {key:'high_knees',    name:'هاي نيز',          sets:'٣ × ٣٠ث', tip:'الركبة لمستوى الخصر'},
+      {key:'mountain',      name:'ماونتن كلايمبرز',  sets:'٣ × ٣٠ث', tip:'البلانك لازم يبقا صح الأول'},
+      {key:'crunches',      name:'كرانش',            sets:'٣ × ١٥', tip:'اشد بطنك مش رقبتك'},
+      {key:'side_plank',    name:'سايد بلانك',       sets:'٢ × ٢٥ث', tip:'كل جنب على حدا'},
+      {key:'jog',           name:'مشي سريع / هرولة', sets:'١٥ دقيقة', tip:'إيقاع مريح تقدر تتكلم فيه'},
+    ]
+  },
+];
+
+// ─────────────────────────────────────────
+// RENDER FUNCTIONS
+// ─────────────────────────────────────────
+
+function ytBlock(yt) {
+  return `
+  <a class="yt-wrap" href="https://www.youtube.com/watch?v=${yt.id}" target="_blank" rel="noopener">
+    <img class="yt-img" src="https://img.youtube.com/vi/${yt.id}/hqdefault.jpg" alt="video">
+    <div class="yt-ov">
+      <div class="yt-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="yt-lbl"><span>▶ شاهد الفيديو التوضيحي</span><span class="yt-note">${yt.note}</span></div>
+    </div>
+  </a>`;
+}
+
+function exCard(ex, type) {
+  const cls = type === 'gym' ? 'g' : 'o';
+  const imgUrl = IMGS[ex.key] || '';
+  const emoji = EMOJI[ex.key] || '💪';
+
+  return `
+  <div class="exc">
+    <div class="exc-photo">
+      <img
+        src="${imgUrl}"
+        alt="${ex.name}"
+        loading="lazy"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      >
+      <div class="exc-fallback ${cls}">${emoji}</div>
+      <div class="tint"></div>
+      <span class="exc-badge ${cls}">${ex.sets}</span>
+      ${ex.star ? `<span class="exc-star">⭐ اتقنه</span>` : ''}
+    </div>
+    <div class="exc-body">
+      <div class="exc-name">${ex.name}</div>
+      ${ex.tip ? `<div class="exc-tip">${ex.tip}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderWorkout(w) {
+  const isGym = w.type === 'gym';
+  const cls = isGym ? 'g' : 'o';
+  return `
+  <div class="wcard ${w.type}">
+    <div class="wcard-glow"></div>
+    <div class="chead">
+      <div class="chead-row">
+        <div>
+          <div class="ctag ${cls}">${w.tag}</div>
+          <div class="ctitle">${w.title}</div>
+          <div class="csub">${w.sub}</div>
+        </div>
+        <div class="cico">${w.icon}</div>
+      </div>
+    </div>
+    ${w.banner ? `
+    <div class="fbanner">
+      <strong>${w.banner.title}</strong>${w.banner.body}
+    </div>` : ''}
+    ${w.yt ? ytBlock(w.yt) : ''}
+    <div class="ex-grid">
+      ${w.exercises.map(e => exCard(e, w.type)).join('')}
+    </div>
+  </div>`;
+}
+
+// BUILD PAGE
+const gymWorkouts  = workouts.filter(w => w.type === 'gym');
+const homeWorkouts = workouts.filter(w => w.type === 'home');
+
+document.getElementById('app').innerHTML =
+  `<div class="sec-head">
+    <div class="sec-big g">GYM</div>
+    <div><div class="sec-label">قسم الجيم</div><div class="sec-note">٥ سبليتات + تمارين الأساس</div></div>
+  </div>
+  <div class="sec-rule"></div>` +
+  gymWorkouts.map(renderWorkout).join('') +
+
+  `<div class="pdiv">
+    <div class="pdiv-line"></div>
+    <div class="pdiv-lbl">قسم البيت</div>
+    <div class="pdiv-line"></div>
+  </div>
+  <div class="sec-head" style="padding-top:6px">
+    <div class="sec-big o">HOME</div>
+    <div><div class="sec-label">قسم البيت</div><div class="sec-note">٣ سبليتات — بدون معدات</div></div>
+  </div>
+  <div class="sec-rule"></div>` +
+  homeWorkouts.map(renderWorkout).join('');
+</script>
+</body>
+</html>
